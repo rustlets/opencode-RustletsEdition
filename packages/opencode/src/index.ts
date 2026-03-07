@@ -1,10 +1,19 @@
-import { initRustlet } from './rustlet/core';
-initRustlet();
+import { initRustlet } from "./rustlet/core"
+import { SystemDispatcher } from "./rustlet/system"
 
-// --- RUSTLET WRAPPER START ---
-process.env.OPENCODE_EDITION = 'RUSTLET';
-process.env.RUSTLET_VERSION = '1.0.0';
-// --- RUSTLET WRAPPER END ---
+initRustlet()
+
+// SOUVEREIGN INTERCEPTION
+// We check for primary keywords in brackets before any CLI processing
+const fullArgs = process.argv.slice(2).join(" ")
+if (fullArgs.trim().startsWith("[")) {
+  const result = SystemDispatcher.dispatch(fullArgs)
+  if (result.intercepted) {
+    if (result.output) console.log(result.output)
+    if (result.error) console.error(result.error)
+    if (result.shouldExit !== false) process.exit(0)
+  }
+}
 
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
@@ -196,17 +205,6 @@ try {
     })
   }
 
-  if (e instanceof ResolveMessage) {
-    Object.assign(data, {
-      name: e.name,
-      message: e.message,
-      code: e.code,
-      specifier: e.specifier,
-      referrer: e.referrer,
-      position: e.position,
-      importKind: e.importKind,
-    })
-  }
   Log.Default.error("fatal", data)
   const formatted = FormatError(e)
   if (formatted) UI.error(formatted)

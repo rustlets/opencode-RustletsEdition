@@ -40,7 +40,10 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
       const [agentStore, setAgentStore] = createStore<{
         current: string
       }>({
-        current: agents()[0].name,
+        current: iife(() => {
+          if (process.env.RUSTLET_ROLE === "system") return "rustletsSystem"
+          return agents()[0].name
+        }),
       })
       const { theme } = useTheme()
       const colors = createMemo(() => [

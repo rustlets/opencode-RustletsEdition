@@ -27,6 +27,7 @@ import { iife } from "@/util/iife"
 import { Locale } from "@/util/locale"
 import { formatDuration } from "@/util/format"
 import { createColors, createFrames } from "../../ui/spinner.ts"
+import { SystemDispatcher } from "@/rustlet/system"
 import { useDialog } from "@tui/ui/dialog"
 import { DialogProvider as DialogProviderConnect } from "../dialog-provider"
 import { DialogAlert } from "../../ui/dialog-alert"
@@ -547,6 +548,24 @@ export function Prompt(props: PromptProps) {
         })()
     const messageID = Identifier.ascending("message")
     let inputText = store.prompt.input
+
+    // RUSTLET SOUVEREIGN INTERCEPTION (TUI)
+    if (inputText.trim().startsWith("[")) {
+      const result = SystemDispatcher.dispatch(inputText, true) // True = Force Human Identity
+      if (result.intercepted) {
+        if (result.output) toast.show({ message: result.output, variant: "success", duration: 5000 })
+        if (result.error) toast.show({ message: result.error, variant: "error", duration: 5000 })
+
+        // Reset prompt
+        input.extmarks.clear()
+        setStore("prompt", { input: "", parts: [] })
+        setStore("extmarkToPartIndex", new Map())
+        input.clear()
+
+        if (result.shouldExit) exit()
+        return
+      }
+    }
 
     // Expand pasted text inline before submitting
     const allExtmarks = input.extmarks.getAllForTypeId(promptPartTypeId)

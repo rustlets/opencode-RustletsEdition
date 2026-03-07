@@ -13,6 +13,7 @@ import PROMPT_COMPACTION from "./prompt/compaction.txt"
 import PROMPT_EXPLORE from "./prompt/explore.txt"
 import PROMPT_SUMMARY from "./prompt/summary.txt"
 import PROMPT_TITLE from "./prompt/title.txt"
+import PROMPT_RUSTLET_SYSTEM from "../rustlet/prompt/system_agent.txt"
 import { PermissionNext } from "@/permission/next"
 import { mergeDeep, pipe, sortBy, values } from "remeda"
 import { Global } from "@/global"
@@ -200,6 +201,16 @@ export namespace Agent {
         ),
         prompt: PROMPT_SUMMARY,
       },
+      rustletsSystem: {
+        name: "rustletsSystem",
+        description: "The sovereign system agent for Rustlets infrastructure management.",
+        mode: "primary",
+        native: true,
+        hidden: false, // On le rend toujours visible techniquement pour éviter le filtrage TUI
+        prompt: PROMPT_RUSTLET_SYSTEM,
+        options: {},
+        permission: PermissionNext.merge(defaults, user),
+      },
     }
 
     for (const [key, value] of Object.entries(cfg.agent ?? {})) {
@@ -256,16 +267,28 @@ export namespace Agent {
 
   export async function list() {
     const cfg = await Config.get()
+    const isSystem = process.env.RUSTLET_ROLE === "system"
+
     return pipe(
       await state(),
       values(),
-      sortBy([(x) => (cfg.default_agent ? x.name === cfg.default_agent : x.name === "build"), "desc"]),
+      sortBy([
+        (x) => {
+          if (isSystem && x.name === "rustletsSystem") return true
+          return cfg.default_agent ? x.name === cfg.default_agent : x.name === "build"
+        },
+        "desc",
+      ]),
     )
   }
 
   export async function defaultAgent() {
     const cfg = await Config.get()
     const agents = await state()
+
+    if (process.env.RUSTLET_ROLE === "system") {
+      return "rustletsSystem"
+    }
 
     if (cfg.default_agent) {
       const agent = agents[cfg.default_agent]

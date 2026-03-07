@@ -81,6 +81,7 @@ import { DialogExportOptions } from "../../ui/dialog-export-options"
 import { formatTranscript } from "../../util/transcript"
 import { UI } from "@/cli/ui.ts"
 import { useTuiConfig } from "../../context/tui-config"
+import { SystemDispatcher } from "@/rustlet/system"
 
 addDefaultParsers(parsers.parsers)
 
@@ -1439,6 +1440,30 @@ function ReasoningPart(props: { last: boolean; part: ReasoningPart; message: Ass
 function TextPart(props: { last: boolean; part: TextPart; message: AssistantMessage }) {
   const ctx = use()
   const { theme, syntax } = useTheme()
+  const dialog = useDialog()
+  const toast = useToast()
+
+  // SOUVEREIGN DELEGATION INTERCEPTION
+  createEffect(async () => {
+    const text = props.part.text.trim()
+    if (text.startsWith("[") && props.part.time?.end) {
+      const result = SystemDispatcher.dispatch(text)
+      if (result.intercepted && result.needsApproval) {
+        const confirmed = await DialogConfirm.show(
+          dialog,
+          "🛡️ System Approval Required",
+          `The agent is requesting a sovereign action: \n\n${result.output}\n\nDo you authorize this change?`,
+        )
+
+        if (confirmed) {
+          const finalResult = SystemDispatcher.addRule(result.payload.payload)
+          if (finalResult.output) toast.show({ message: finalResult.output, variant: "success" })
+          if (finalResult.error) toast.show({ message: finalResult.error, variant: "error" })
+        }
+      }
+    }
+  })
+
   return (
     <Show when={props.part.text.trim()}>
       <box id={"text-" + props.part.id} paddingLeft={3} marginTop={1} flexShrink={0}>
