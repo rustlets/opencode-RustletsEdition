@@ -1,3 +1,6 @@
+import { initRustlet } from './rustlet/core';
+initRustlet();
+
 // --- RUSTLET WRAPPER START ---
 process.env.OPENCODE_EDITION = 'RUSTLET';
 process.env.RUSTLET_VERSION = '1.0.0';
