@@ -1,0 +1,30 @@
+name: Rustlet-Factory
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+jobs:
+  transform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev-rustlet
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+      - uses: oven-sh/setup-bun@v1
+      - name: Sync
+        run: |
+          git config --global user.name "Factory"
+          git config --global user.email "factory@rustlets.dev"
+          git remote add upstream https://github.com/opencode-ai/opencode.git
+          git fetch upstream main
+          # Simulation de l'exécution
+          echo "Transformation en cours..."
+      - name: Deploy
+        if: success()
+        run: |
+          git checkout main-rustlet
+          git merge dev-rustlet
+          git push origin main-rustlet

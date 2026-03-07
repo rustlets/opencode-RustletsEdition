@@ -1,3 +1,8 @@
+// --- RUSTLET WRAPPER START ---
+process.env.OPENCODE_EDITION = 'RUSTLET';
+process.env.RUSTLET_VERSION = '1.0.0';
+// --- RUSTLET WRAPPER END ---
+
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import { RunCommand } from "./cli/cmd/run"

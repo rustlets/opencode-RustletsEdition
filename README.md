@@ -3,47 +3,31 @@
     <picture>
       <source srcset="packages/console/app/src/asset/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="packages/console/app/src/asset/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
-      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="OpenCode logo">
+      <img src="packages/console/app/src/asset/logo-ornate-light.svg" alt="OpenCode Rustlet Edition">
     </picture>
   </a>
 </p>
-<p align="center">The open source AI coding agent.</p>
+<p align="center"><b>OpenCode - Rustlet Edition</b></p>
+<p align="center">Version optimisée pour l'écosystème Rustlet/Orix. Distribution autonome haute performance.</p>
 <p align="center">
   <a href="https://opencode.ai/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
-  <a href="https://www.npmjs.com/package/opencode-ai"><img alt="npm" src="https://img.shields.io/npm/v/opencode-ai?style=flat-square" /></a>
-  <a href="https://github.com/anomalyco/opencode/actions/workflows/publish.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/anomalyco/opencode/publish.yml?style=flat-square&branch=dev" /></a>
 </p>
-
-<p align="center">
-  <a href="README.md">English</a> |
-  <a href="README.zh.md">简体中文</a> |
-  <a href="README.zht.md">繁體中文</a> |
-  <a href="README.ko.md">한국어</a> |
-  <a href="README.de.md">Deutsch</a> |
-  <a href="README.es.md">Español</a> |
-  <a href="README.fr.md">Français</a> |
-  <a href="README.it.md">Italiano</a> |
-  <a href="README.da.md">Dansk</a> |
-  <a href="README.ja.md">日本語</a> |
-  <a href="README.pl.md">Polski</a> |
-  <a href="README.ru.md">Русский</a> |
-  <a href="README.bs.md">Bosanski</a> |
-  <a href="README.ar.md">العربية</a> |
-  <a href="README.no.md">Norsk</a> |
-  <a href="README.br.md">Português (Brasil)</a> |
-  <a href="README.th.md">ไทย</a> |
-  <a href="README.tr.md">Türkçe</a> |
-  <a href="README.uk.md">Українська</a> |
-  <a href="README.bn.md">বাংলা</a> |
-  <a href="README.gr.md">Ελληνικά</a> |
-  <a href="README.vi.md">Tiếng Việt</a>
-</p>
-
-[![OpenCode Terminal UI](packages/web/src/assets/lander/screenshot.png)](https://opencode.ai)
 
 ---
 
-### Installation
+### À propos de la Rustlet Edition
+
+Cette version d'OpenCode est un **fork actif** maintenu pour garantir une intégration parfaite avec l'infrastructure **Rustlet/Orix**. Elle inclut des optimisations spécifiques pour la distribution de ressources et la gestion multi-agents.
+
+#### Spécificités :
+
+- **Optimisation Distribution** : Conçue pour tourner en instance partagée avec isolation par utilisateur via wrapper Rust.
+- **Architecture Orix** : Support natif des protocoles de communication et de sécurité Rustlet.
+- **Indépendance Upstream** : Bien que synchronisée avec l'upstream, cette version privilégie la stabilité et les performances du moteur core Rustlet.
+
+---
+
+### Installation (Rustlet)
 
 ```bash
 # YOLO
@@ -135,6 +119,15 @@ It's very similar to Claude Code in terms of capability. Here are the key differ
 - Out-of-the-box LSP support
 - A focus on TUI. OpenCode is built by neovim users and the creators of [terminal.shop](https://terminal.shop); we are going to push the limits of what's possible in the terminal.
 - A client/server architecture. This, for example, can allow OpenCode to run on your computer while you drive it remotely from a mobile app, meaning that the TUI frontend is just one of the possible clients.
+
+### Licence (Shared-Code v2.0 Lite)
+
+Ce projet est distribué sous la **Shared-Code License v2.0 (Lite)**. Il s'agit d'une infrastructure liquide souveraine dont l'accès et l'utilisation sont régis par des protocoles d'arbitrage algorithmique.
+
+- **Licence Souveraine** : Adoption de la **Shared-Code License v2.0 (Lite)**. Protection de la logique structurelle (.rson, SegX) et définition des niveaux d'accès (Lite, Commercial, Industrial).
+- **Stack de Licence (Substrat vs Overlay)** : Intégration autorisée du code sous licence permissive (MIT, Apache 2.0, BSD) en tant que _Substrate Code_, tout en conservant la gouvernance _Sovereign Overlay_ pour l'infrastructure liquide. Exclusion stricte du Strong Copyleft (GPL, AGPL) pour protéger l'intégrité de la logique souveraine.
+
+Consultez le fichier [LICENSE.md](./LICENSE.md) pour le texte intégral.
 
 ---
 
