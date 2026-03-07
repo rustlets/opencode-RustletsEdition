@@ -5,6 +5,7 @@ Ce document définit les standards opérationnels de l'usine autonome Rustlet.
 ## 1. Standards Technologiques
 
 - **Langage** : Rust (Canal `stable` exclusivement).
+- **Zéro Tolérance** : Toute compilation produisant un `warning` est considérée comme un échec critique (`#[deny(warnings)]` activé).
 - **Runtime** : Bun (Version `latest` pour le moteur de tests).
 - **CI/CD** : GitHub Actions avec cache de build persistant.
 

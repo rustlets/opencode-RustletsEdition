@@ -6,6 +6,12 @@
 
 ## Style Guide
 
+### Rustlet Quality Standards (STRICT)
+
+- **Zéro Tolérance aux Warnings** : Tout code Rust doit impérativement compiler sans aucun avertissement. L'usage de `#[deny(warnings)]` est obligatoire en haut de chaque binaire ou librairie.
+- **Architecture Immuable** : Ne jamais utiliser de liens symboliques (Symlinks) ou de systèmes de fichiers virtuels (OverlayFS) pour la distribution. Toujours privilégier la compilation d'artefacts autonomes.
+- **Subdivision Statique** : Les modifications du code original doivent se faire via des ancrages statiques (`hooks`) injectés par le transformateur Rust, et non par des patches au runtime.
+
 ### General Principles
 
 - Keep things in one function unless composable or reusable
