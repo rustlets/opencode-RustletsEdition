@@ -1,30 +1,83 @@
-name: Rustlet-Factory
+name: Sovereign-Factory-V2
 on:
   schedule:
     - cron: "0 * * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
 jobs:
-  transform:
-    runs-on: ubuntu-latest
+  forge:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact_name: opencode-rustlet-linux
+          - os: windows-latest
+            artifact_name: opencode-rustlet-windows.exe
+          - os: macos-latest
+            artifact_name: opencode-rustlet-macos
+
+    runs-on: ${{ matrix.os }}
+
     steps:
       - uses: actions/checkout@v4
         with:
           ref: dev-rustlet
           fetch-depth: 0
-      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Setup Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
       - uses: swatinem/rust-cache@v2
-      - uses: oven-sh/setup-bun@v1
-      - name: Sync
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Run Sovereign Transformer
+        id: transform
+        shell: bash
         run: |
-          git config --global user.name "Factory"
-          git config --global user.email "factory@rustlets.dev"
-          git remote add upstream https://github.com/opencode-ai/opencode.git
-          git fetch upstream main
-          # Simulation de l'exécution
-          echo "Transformation en cours..."
-      - name: Deploy
-        if: success()
+          echo "🔨 Running Rustlet Transformer..."
+          cd .factory || mkdir -p .factory && cp -r /opt/RUSTLETS/_dataColdDev/bunScript/github-pipeline/* .factory/
+          cd .factory
+          REPO_PATH=$GITHUB_WORKSPACE cargo run --release
+          # On exporte le changelog pour l'étape de release
+          echo "CHANGELOG_PATH=$GITHUB_WORKSPACE/CHANGELOG-RUSTLET.md" >> $GITHUB_ENV
+
+      - name: Compile Immutable Binary
+        shell: bash
         run: |
-          git checkout main-rustlet
-          git merge dev-rustlet
-          git push origin main-rustlet
+          bun install
+          cd packages/opencode
+          # We compile the entry point that now contains our hard-coded hooks
+          bun build ./src/index.ts --compile --outfile ../../${{ matrix.artifact_name }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_name }}
+
+  release:
+    needs: forge
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main-rustlet' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          files: |
+            opencode-rustlet-linux/*
+            opencode-rustlet-windows.exe/*
+            opencode-rustlet-macos/*
+          body: "Artifacts Immuables - OpenCode Rustlet Edition v1.0.${{ github.run_number }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
