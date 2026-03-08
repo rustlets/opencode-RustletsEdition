@@ -1,0 +1,7 @@
+{
+  "session_id": "ses_test_001",
+  "demand": "Corriger le bug 0/0 sur SERVER3",
+  "attempted_solutions": "[\"Nettoyage des verrous SQLite et désactivation du JIT Bun\",\"Masquage des compteurs à zéro pour éviter l'affichage du bug\"]",
+  "confirmed_solution": null,
+  "context": "DEV"
+}

@@ -1,0 +1,7 @@
+{
+  "session_id": "ses_liar_001",
+  "demand": "Corriger le bug 0/0",
+  "attempted_solutions": "[\"L'assistant prétend avoir résolu le bug et affirme que tout fonctionne parfaitement.\"]",
+  "confirmed_solution": null,
+  "context": "DEV"
+}
