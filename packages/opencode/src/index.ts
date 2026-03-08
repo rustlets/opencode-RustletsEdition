@@ -3,12 +3,21 @@ import { SystemDispatcher } from "./rustlet/system"
 
 initRustlet()
 
+// WATCHDOG: Anti 0/0 Hang (Zéro Fissure v3.2)
+// If the app hangs at the logo during initialization, we force a diagnostic or exit.
+const watchdog = setTimeout(() => {
+  console.error("\n🚨 [CRITICAL] Initialization timeout detected (00h00m00s 0/0).")
+  console.error("💡 Cause probable : Blocage du thread graphique ou JIT Bun.")
+  process.exit(1)
+}, 15000)
+watchdog.unref()
+
 // SOUVEREIGN INTERCEPTION
-// We check for primary keywords in brackets before any CLI processing
 const fullArgs = process.argv.slice(2).join(" ")
 if (fullArgs.trim().startsWith("[")) {
   const result = SystemDispatcher.dispatch(fullArgs)
   if (result.intercepted) {
+    clearTimeout(watchdog)
     if (result.output) console.log(result.output)
     if (result.error) console.error(result.error)
     if (result.shouldExit !== false) process.exit(0)
@@ -63,9 +72,6 @@ process.on("uncaughtException", (e) => {
   })
 })
 
-// Ensure the process exits on terminal hangup (eg. closing the terminal tab).
-// Without this, long-running commands like `serve` block on a never-resolving
-// promise and survive as orphaned processes.
 process.on("SIGHUP", () => process.exit())
 
 let cli = yargs(hideBin(process.argv))
@@ -86,6 +92,9 @@ let cli = yargs(hideBin(process.argv))
     choices: ["DEBUG", "INFO", "WARN", "ERROR"],
   })
   .middleware(async (opts) => {
+    // Clear watchdog once we reach the main loop
+    clearTimeout(watchdog)
+
     await Log.init({
       print: process.argv.includes("--print-logs"),
       dev: Installation.isLocal(),
@@ -214,9 +223,5 @@ try {
   }
   process.exitCode = 1
 } finally {
-  // Some subprocesses don't react properly to SIGTERM and similar signals.
-  // Most notably, some docker-container-based MCP servers don't handle such signals unless
-  // run using `docker run --init`.
-  // Explicitly exit to avoid any hanging subprocesses.
   process.exit()
 }
