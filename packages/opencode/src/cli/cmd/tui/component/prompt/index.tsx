@@ -28,6 +28,7 @@ import { Locale } from "@/util/locale"
 import { formatDuration } from "@/util/format"
 import { createColors, createFrames } from "../../ui/spinner.ts"
 import { SystemDispatcher } from "@/rustlet/system"
+import { Learner } from "@/rustlet/learner"
 import { useDialog } from "@tui/ui/dialog"
 import { DialogProvider as DialogProviderConnect } from "../dialog-provider"
 import { DialogAlert } from "../../ui/dialog-alert"
@@ -675,6 +676,7 @@ export function Prompt(props: PromptProps) {
         })
       }, 50)
     input.clear()
+    Learner.trigger()
   }
   const exit = useExit()
 

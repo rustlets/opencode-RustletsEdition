@@ -12,6 +12,7 @@
 - **Architecture Immuable** : Ne jamais utiliser de liens symboliques (Symlinks) ou de systèmes de fichiers virtuels (OverlayFS) pour la distribution. Toujours privilégier la compilation d'artefacts autonomes.
 - **Subdivision Statique** : Les modifications du code original doivent se faire via des ancrages statiques (`hooks`) injectés par le transformateur Rust, et non par des patches au runtime.
 - **Mémoire Long-Terme** : Pour toute tâche complexe de débogage ou d'infrastructure, utilisez systématiquement l'outil `check_knowledge` pour éviter de reproduire des erreurs passées et identifier les solutions confirmées.
+- **Apprentissage Continu** : Le système déclenche automatiquement un cycle `discuss-learner` à chaque réception de message utilisateur pour mettre à jour la base de connaissances en temps réel.
 
 ### General Principles
 
