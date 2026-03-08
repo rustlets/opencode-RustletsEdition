@@ -3,19 +3,12 @@ import { SystemDispatcher } from "./rustlet/system"
 
 initRustlet()
 
-// WATCHDOG: Anti-Hang Protection (Zéro Fissure v3.3)
-const watchdog = setTimeout(() => {
-  console.error("\n🛑 [TIMEOUT] Initialization halted. Possible deadlock detected.")
-  process.exit(1)
-}, 30000)
-watchdog.unref()
-
 // SOUVEREIGN INTERCEPTION
+
 const fullArgs = process.argv.slice(2).join(" ")
 if (fullArgs.trim().startsWith("[")) {
   const result = SystemDispatcher.dispatch(fullArgs)
   if (result.intercepted) {
-    clearTimeout(watchdog)
     if (result.output) console.log(result.output)
     if (result.error) console.error(result.error)
     if (result.shouldExit !== false) process.exit(0)
@@ -90,9 +83,6 @@ let cli = yargs(hideBin(process.argv))
     choices: ["DEBUG", "INFO", "WARN", "ERROR"],
   })
   .middleware(async (opts) => {
-    // Clear watchdog once we reach the main loop
-    clearTimeout(watchdog)
-
     await Log.init({
       print: process.argv.includes("--print-logs"),
       dev: Installation.isLocal(),
