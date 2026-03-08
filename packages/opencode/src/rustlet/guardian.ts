@@ -4,15 +4,14 @@ import path from "path"
 export class Guardian {
   private static rulesPath = "/opt/RUSTLETS/_dataColdDev/mcpserver/rules.md"
 
-  // Le strict minimum pour garantir l'identité Rustlet et la survie du verrou
+  // Le strict minimum pour garantir l'identité Rustlet
   private static PROTECTED_FILES = ["Cargo.toml", "guardian.ts", "system.ts"]
 
   /**
    * Valide l'exécution d'un outil.
-   * Ne bloque que le strict nécessaire pour respecter le cadre primaire.
    */
   static validate(tool: string, params: any) {
-    // 1. Protection contre la création/modification directe de fichiers sanctuarisés
+    // 1. Protection contre la création/modification directe
     if (tool === "write" || tool === "edit") {
       const filePath = params.filePath || params.filepath
       if (filePath) {
@@ -29,10 +28,14 @@ export class Guardian {
     if (tool === "bash") {
       const command = params.command
       if (command) {
+        // Blocage de patterns destructeurs generaux
+        if (command.includes("rm -rf /") && !command.includes("/opt/RUSTLETS/test")) {
+          throw new Error("❌ [RUSTLET_VIOLATION] Operation Blocked: Destructive root deletion is strictly forbidden.")
+        }
+
         // On ne bloque QUE si une commande bash tente de modifier un fichier protégé
         for (const file of this.PROTECTED_FILES) {
           if (command.includes(file)) {
-            // On autorise la lecture (cat, ls, grep, etc.)
             const isSafe = /^(cat|ls|grep|find|file|stat|head|tail)\s/.test(command.trim())
             if (!isSafe) {
               throw new Error(
@@ -42,7 +45,7 @@ export class Guardian {
           }
         }
 
-        // La règle Sudo reste active car elle est essentielle pour l'automatisation
+        // La règle Sudo
         if (command.includes("sudo ") && !command.includes("echo $SUDO_PASSWORD | sudo -S")) {
           throw new Error(
             "❌ [RUSTLET_VIOLATION] Sudo usage must follow the secure pattern: 'echo $SUDO_PASSWORD | sudo -S <command>'",
@@ -57,7 +60,7 @@ export class Guardian {
   private static checkDynamicRules(_tool: string, _params: any) {
     try {
       if (fs.existsSync(this.rulesPath)) {
-        // Logique pour les règles évolutives du mcpserver
+        // Futur
       }
     } catch (e) {
       /* Silence */
