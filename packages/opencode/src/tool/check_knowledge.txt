@@ -1,0 +1,3 @@
+Searches the Rustlet long-term knowledge base for lessons learned from previous sessions. 
+Use this tool to avoid repeating failed solutions and to identify confirmed fixes for complex infrastructure or debugging tasks.
+Pass keywords related to the problem (e.g., '0/0 bug', 'SERVER3', 'JIT').
