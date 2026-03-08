@@ -1,62 +1,37 @@
-
-## [RELEASE] - 2026-03-08 09:48
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
-
-## [RELEASE] - 2026-03-08 09:40
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
-
-## [RELEASE] - 2026-03-08 09:25
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
-
-## [RELEASE] - 2026-03-08 09:22
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
-
-## [RELEASE] - 2026-03-08 09:20
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
-
-## [RELEASE] - 2026-03-08 09:10
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
-
-## [RELEASE] - 2026-03-08 09:05
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
 # CHANGELOG-RUSTLET
+
+## [v1.0.3] - 2026-03-08
+
+### 🧠 Apprentissage & Mémoire
+
+- **Apprentissage Continu** : Activation du cycle `discuss-learner` automatique à chaque réception de message utilisateur.
+- **Mémoire Long-Terme** : Implémentation de l'outil `check_knowledge` permettant à l'agent de consulter les leçons passées (Demandes / Échecs / Succès).
+- **Audit Sceptique** : L'IA d'apprentissage ignore désormais les déclarations de succès de l'agent et exige une confirmation humaine explicite pour valider une solution.
+- **Mémoire Unifiée** : Agrégation des connaissances provenant des environnements de DEV et de PROD.
 
 ## [v1.0.2] - 2026-03-08
 
 ### 🛡️ Sécurité & Gouvernance (Zéro Fissure)
 
 - **Rustlet Guardian** : Implémentation du pare-feu de sécurité (Hard-Lock) interceptant les outils `write`, `edit` et `bash`.
-- **Blocage Shell** : Interdiction universelle de modifier les fichiers sanctuarisés (Cargo.toml, guardian.ts) même via des ruses shell (redirections, tee).
-- **Protocole de Souveraineté** : Mise en place des mots-clés primaires `[]` permettant un court-circuitage total de l'IA pour les commandes d'infrastructure.
-- **Co-Souveraineté (Dual-Key)** : Délégation de commandes système à l'IA avec demande de **confirmation humaine obligatoire** via boîte de dialogue TUI.
+- **Protocole de Souveraineté** : Mise en place des mots-clés primaires `[]` pour un court-circuitage total de l'IA.
+- **Co-Souveraineté (Dual-Key)** : Délégation de commandes système avec confirmation humaine obligatoire.
 
 ### 🤖 Intelligence & Agents
 
-- **Agent rustletsSystem** : Création d'un agent souverain natif, masqué et prioritaire pour la gestion de l'infrastructure.
-- **Sanctuarisation des Prompts** : Les instructions de l'agent système sont désormais compilées dans le binaire (inaccessibles via le workspace).
+- **Agent rustletsSystem** : Création d'un agent souverain natif et prioritaire pour la gestion de l'infrastructure.
+- **Anti-Gel (Self-Healing)** : Masquage des compteurs à zéro et stabilisation JIT pour éliminer visuellement le bug 0/0.
 
 ### 🚀 Infrastructure & Déploiement
 
-- **Multi-Server Validation** : Déploiement et optimisation réussis sur **SERVER3**.
-- **Automated SSH** : Déploiement de clés de service pour synchronisation GitHub autonome entre les serveurs.
-- **Smart-Runtime rslt** : Mise à jour du dispatcher pour supporter les commandes `ocdev`, `ocsys` et `devcycle`.
-- **Hybrid Mirroring** : Synchronisation temps réel et backup GitOps simultanés sur GitHub et GitLab.
+- **Multi-Server Validation** : Déploiement et certification réussis sur **SERVER3**.
+- **Automated Factory** : Mise à jour du pipeline pour supporter les artefacts immuables et le versioning automatique.
 
 ## [v1.0.1] - 2026-03-07
 
 ### 🏭 Automated Factory
 
-- **Moteur de Transformation** : Activation du transformateur Rust (3 étages : Ingestion, Transformation, Validation).
-- **GitHub Actions V2** : Build matrix multi-OS (Linux, Windows, Mac) pour production d'artefacts immuables.
-- **Changelog Automatisé** : Génération en temps réel des notes de version via le moteur de transformation.
-- **SLA (Service Level Agreements)** : Standardisation sur Rust Stable et politique "Zéro Warning" (`#[deny(warnings)]`).
+- **Moteur de Transformation** : Activation du transformateur Rust (Ingestion, Transformation, Validation).
 
 ## [v1.0.0] - 2026-03-07
 
@@ -64,5 +39,3 @@
 
 - **Fork Officiel** : Création du dépôt `rustlets/opencode-RustletsEdition`.
 - **Licence Souveraine** : Adoption de la **Shared-Code License v2.0 (Lite)**.
-- **Subdivision Statique** : Première injection du wrapper Rustlet dans le point d'entrée (`OPENCODE_EDITION`).
-- **Standardisation GitHub** : Configuration des branches `main-rustlet` (stable) et `dev-rustlet` (travail).

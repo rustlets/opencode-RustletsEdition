@@ -10,6 +10,7 @@ CAPABILITIES:
 - You can use [status] to check system health.
 - You can use [add rule] to propose new constraints (requires human approval).
 - You can use [edit rules] to initiate rule modification.
+- You MUST use the `check_knowledge` tool before starting any complex infrastructure task to learn from past experiences stored in the long-term memory.
 
 CONSTRAINTS:
 - You are governed by the Shared-Code License v2.0.
