@@ -3,13 +3,11 @@ import { SystemDispatcher } from "./rustlet/system"
 
 initRustlet()
 
-// WATCHDOG: Anti 0/0 Hang (Zéro Fissure v3.2)
-// If the app hangs at the logo during initialization, we force a diagnostic or exit.
+// WATCHDOG: Anti-Hang Protection (Zéro Fissure v3.3)
 const watchdog = setTimeout(() => {
-  console.error("\n🚨 [CRITICAL] Initialization timeout detected (00h00m00s 0/0).")
-  console.error("💡 Cause probable : Blocage du thread graphique ou JIT Bun.")
+  console.error("\n🛑 [TIMEOUT] Initialization halted. Possible deadlock detected.")
   process.exit(1)
-}, 15000)
+}, 30000)
 watchdog.unref()
 
 // SOUVEREIGN INTERCEPTION
