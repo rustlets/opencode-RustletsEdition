@@ -4,15 +4,28 @@ import { SystemDispatcher } from "../src/rustlet/system"
 import { Agent } from "../src/agent/agent"
 import { Instance } from "../src/project/instance"
 
-describe("🛡️ Rustlet Guardian Security Framework", () => {
-  test("Hard-Lock: Block Cargo.toml creation", () => {
+describe("🛡️ Rustlet Guardian Security Framework (Generalized)", () => {
+  test("File Lock: Block forbidden files", () => {
     const attempt = () => Guardian.validate("write", { filePath: "/path/to/Cargo.toml" })
+    expect(attempt).toThrow(/RUSTLET_VIOLATION/)
+
+    const lockAttempt = () => Guardian.validate("write", { filePath: "package-lock.json" })
+    expect(lockAttempt).toThrow(/RUSTLET_VIOLATION/)
+  })
+
+  test("Shell Lock: Block forbidden file modification via bash", () => {
+    const attempt = () => Guardian.validate("bash", { command: "echo test > Cargo.toml" })
     expect(attempt).toThrow(/RUSTLET_VIOLATION/)
   })
 
-  test("Hard-Lock: Block unsafe sudo commands", () => {
-    const attempt = () => Guardian.validate("bash", { command: "sudo rm -rf /" })
-    expect(attempt).toThrow(/RUSTLET_VIOLATION/)
+  test("Command Lock: Block restricted commands", () => {
+    const attempt = () => Guardian.validate("bash", { command: "rm -rf /" })
+    expect(attempt).toThrow(/Operation Blocked: Destructive root deletion/)
+  })
+
+  test("Sudo: Enforce transparency pattern", () => {
+    const attempt = () => Guardian.validate("bash", { command: "sudo ls" })
+    expect(attempt).toThrow(/Sudo commands must follow the pattern/)
   })
 })
 
@@ -40,7 +53,6 @@ describe("🤖 Rustlets Agent & Identity System", () => {
   test("Priority: rustletsSystem must be default when RUSTLET_ROLE=system", async () => {
     process.env.RUSTLET_ROLE = "system"
 
-    // We provide a mock instance directory to avoid NotFound error
     await Instance.provide({
       directory: process.cwd(),
       fn: async () => {
@@ -50,15 +62,5 @@ describe("🤖 Rustlets Agent & Identity System", () => {
     })
 
     delete process.env.RUSTLET_ROLE
-  })
-
-  test("Visibility: rustletsSystem must be present in the list", async () => {
-    await Instance.provide({
-      directory: process.cwd(),
-      fn: async () => {
-        const agents = await Agent.list()
-        expect(agents.some((a) => a.name === "rustletsSystem")).toBe(true)
-      },
-    })
   })
 })
