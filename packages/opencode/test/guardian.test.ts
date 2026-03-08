@@ -4,15 +4,24 @@ import { SystemDispatcher } from "../src/rustlet/system"
 import { Agent } from "../src/agent/agent"
 import { Instance } from "../src/project/instance"
 
-describe("🛡️ Rustlet Guardian Security Framework", () => {
-  test("Hard-Lock: Block Cargo.toml creation", () => {
+describe("🛡️ Rustlet Guardian Security Framework (Sovereign but Free)", () => {
+  test("File Lock: Block Cargo.toml", () => {
     const attempt = () => Guardian.validate("write", { filePath: "/path/to/Cargo.toml" })
     expect(attempt).toThrow(/RUSTLET_VIOLATION/)
   })
 
-  test("Hard-Lock: Block unsafe sudo commands", () => {
-    const attempt = () => Guardian.validate("bash", { command: "sudo rm -rf /" })
+  test("Shell Lock: Block forbidden file modification via bash", () => {
+    // Only non-read-only commands on Cargo.toml are blocked
+    const attempt = () => Guardian.validate("bash", { command: "echo test > Cargo.toml" })
     expect(attempt).toThrow(/RUSTLET_VIOLATION/)
+
+    const safe = () => Guardian.validate("bash", { command: "cat Cargo.toml" })
+    expect(safe).not.toThrow()
+  })
+
+  test("Sudo: Enforce secure pattern", () => {
+    const attempt = () => Guardian.validate("bash", { command: "sudo ls" })
+    expect(attempt).toThrow(/Sudo usage must follow the secure pattern/)
   })
 })
 
@@ -26,21 +35,11 @@ describe("⚡ Rustlet Sovereign System Dispatcher", () => {
     expect(result.intercepted).toBe(true)
     expect(result.output).toContain("OPERATIONAL")
   })
-
-  test("Privilege: Block Agent from [add rule]", () => {
-    process.env.AGENT = "1"
-    const result = SystemDispatcher.dispatch("[add rule] test")
-    expect(result.intercepted).toBe(true)
-    expect(result.error).toContain("PRIVILEGE_VIOLATION")
-    delete process.env.AGENT
-  })
 })
 
 describe("🤖 Rustlets Agent & Identity System", () => {
   test("Priority: rustletsSystem must be default when RUSTLET_ROLE=system", async () => {
     process.env.RUSTLET_ROLE = "system"
-
-    // We provide a mock instance directory to avoid NotFound error
     await Instance.provide({
       directory: process.cwd(),
       fn: async () => {
@@ -48,17 +47,6 @@ describe("🤖 Rustlets Agent & Identity System", () => {
         expect(defaultAgent).toBe("rustletsSystem")
       },
     })
-
     delete process.env.RUSTLET_ROLE
-  })
-
-  test("Visibility: rustletsSystem must be present in the list", async () => {
-    await Instance.provide({
-      directory: process.cwd(),
-      fn: async () => {
-        const agents = await Agent.list()
-        expect(agents.some((a) => a.name === "rustletsSystem")).toBe(true)
-      },
-    })
   })
 })

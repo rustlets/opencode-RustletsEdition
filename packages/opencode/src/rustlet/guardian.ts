@@ -3,60 +3,64 @@ import path from "path"
 
 export class Guardian {
   private static rulesPath = "/opt/RUSTLETS/_dataColdDev/mcpserver/rules.md"
-  private static processPath = "/opt/RUSTLETS/_dataColdDev/mcpserver/process.md"
+
+  // Le strict minimum pour garantir l'identité Rustlet et la survie du verrou
+  private static PROTECTED_FILES = ["Cargo.toml", "guardian.ts", "system.ts"]
 
   /**
-   * Validates a tool execution against Rustlet Primary Rules.
-   * Throws an Error if a rule is violated.
+   * Valide l'exécution d'un outil.
+   * Ne bloque que le strict nécessaire pour respecter le cadre primaire.
    */
   static validate(tool: string, params: any) {
-    // console.log(`🛡️ [GUARDIAN] Validating ${tool}...`);
-
-    // 1. Rule: No Rust Scaffolding (Hard Lock)
-    // Enforced directly to be "Impossible to bypass"
+    // 1. Protection contre la création/modification directe de fichiers sanctuarisés
     if (tool === "write" || tool === "edit") {
       const filePath = params.filePath || params.filepath
-      if (filePath && (path.basename(filePath) === "Cargo.toml" || path.extname(filePath) === ".rs")) {
-        // We block .rs too as per "no initializing new Rust projects"
-        // But wait, the user said "creating Cargo.toml files or initializing new Rust projects"
-        if (path.basename(filePath) === "Cargo.toml") {
+      if (filePath) {
+        const fileName = path.basename(filePath)
+        if (this.PROTECTED_FILES.includes(fileName)) {
           throw new Error(
-            "❌ [RUSTLET_VIOLATION] Operation Blocked: Creation or modification of 'Cargo.toml' is strictly forbidden by the Rustlet Edition behavioral framework to prevent environment pollution.",
+            `❌ [RUSTLET_VIOLATION] Operation Blocked: '${fileName}' is protected by the primary framework.`,
           )
         }
       }
     }
 
-    // 2. Rule: Sudo Transparency (Security First)
+    // 2. Protection intelligente du Shell (Bash)
     if (tool === "bash") {
       const command = params.command
-      if (command && command.includes("sudo")) {
-        // We ensure sudo is only used with the proper pattern
-        if (!command.includes("echo $SUDO_PASSWORD | sudo -S")) {
+      if (command) {
+        // On ne bloque QUE si une commande bash tente de modifier un fichier protégé
+        for (const file of this.PROTECTED_FILES) {
+          if (command.includes(file)) {
+            // On autorise la lecture (cat, ls, grep, etc.)
+            const isSafe = /^(cat|ls|grep|find|file|stat|head|tail)\s/.test(command.trim())
+            if (!isSafe) {
+              throw new Error(
+                `❌ [RUSTLET_VIOLATION] Operation Blocked: Modification of '${file}' via Shell is forbidden.`,
+              )
+            }
+          }
+        }
+
+        // La règle Sudo reste active car elle est essentielle pour l'automatisation
+        if (command.includes("sudo ") && !command.includes("echo $SUDO_PASSWORD | sudo -S")) {
           throw new Error(
-            "❌ [RUSTLET_VIOLATION] Operation Blocked: Sudo commands must follow the pattern 'echo $SUDO_PASSWORD | sudo -S <command>' for automation compatibility.",
+            "❌ [RUSTLET_VIOLATION] Sudo usage must follow the secure pattern: 'echo $SUDO_PASSWORD | sudo -S <command>'",
           )
         }
       }
     }
 
-    // 3. Dynamic Rule Verification
     this.checkDynamicRules(tool, params)
   }
 
-  private static checkDynamicRules(tool: string, params: any) {
+  private static checkDynamicRules(_tool: string, _params: any) {
     try {
       if (fs.existsSync(this.rulesPath)) {
-        const rules = fs.readFileSync(this.rulesPath, "utf8")
-
-        // Example: If the rules contain a specific forbidden pattern
-        if (rules.includes("Validation Mandatory")) {
-          // This is more of a behavioral instruction, but we could enforce
-          // that certain files are read before being edited (already done by OpenCode)
-        }
+        // Logique pour les règles évolutives du mcpserver
       }
     } catch (e) {
-      // Fail silently for dynamic rules to not block the system if file is missing
+      /* Silence */
     }
   }
 }
