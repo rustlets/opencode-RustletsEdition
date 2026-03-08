@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://opencode.ai">
+  <a href="https://github.com/rustlets/opencode-RustletsEdition">
     <picture>
       <source srcset="packages/console/app/src/asset/logo-ornate-dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="packages/console/app/src/asset/logo-ornate-light.svg" media="(prefers-color-scheme: light)">
@@ -10,122 +10,67 @@
 <p align="center"><b>OpenCode - Rustlet Edition</b></p>
 <p align="center">Version optimisée pour l'écosystème Rustlet/Orix. Distribution autonome haute performance.</p>
 <p align="center">
-  <a href="https://opencode.ai/discord"><img alt="Discord" src="https://img.shields.io/discord/1391832426048651334?style=flat-square&label=discord" /></a>
+  <a href="https://github.com/rustlets/opencode-RustletsEdition"><img alt="Version" src="https://img.shields.io/badge/version-1.0.2-blue?style=flat-square" /></a>
+  <a href="./LICENSE.md"><img alt="License" src="https://img.shields.io/badge/license-Shared--Code%20v2.0-orange?style=flat-square" /></a>
 </p>
 
 ---
 
 ### À propos de la Rustlet Edition
 
-Cette version d'OpenCode est un **fork actif** maintenu pour garantir une intégration parfaite avec l'infrastructure **Rustlet/Orix**. Elle inclut des optimisations spécifiques pour la distribution de ressources et la gestion multi-agents.
+Cette version d'OpenCode est une **Sovereign Liquid Infrastructure** maintenue pour garantir une intégration parfaite avec l'écosystème **Rustlet/Orix**. Elle transforme l'agent original en un outil industriel immuable et hautement sécurisé.
 
-#### Spécificités :
+#### Points Forts :
 
-- **Optimisation Distribution** : Conçue pour tourner en instance partagée avec isolation par utilisateur via wrapper Rust.
-- **Architecture Orix** : Support natif des protocoles de communication et de sécurité Rustlet.
-- **Indépendance Upstream** : Bien que synchronisée avec l'upstream, cette version privilégie la stabilité et les performances du moteur core Rustlet.
+- **Zéro Fissure** : Architecture basée sur des artefacts immuables compilés sur GitHub (Matrix Build).
+- **Rustlet Guardian** : Pare-feu logiciel interdisant toute pollution de l'environnement (ex: scaffolding Rust non autorisé).
+- **Commandes Souveraines** : Support des mots-clés `[]` pour un contrôle direct de l'infrastructure sans interprétation par l'IA.
+- **Délégation Sécurisée** : Protocole Dual-Key (confirmation humaine) pour les actions système demandées par l'agent.
 
 ---
 
-### Installation (Rustlet)
+### Utilisation (CLI rslt)
+
+L'infrastructure est pilotée par le dispatcher intelligent `rslt` :
 
 ```bash
-# YOLO
-curl -fsSL https://opencode.ai/install | bash
-
-# Package managers
-npm i -g opencode-ai@latest        # or bun/pnpm/yarn
-scoop install opencode             # Windows
-choco install opencode             # Windows
-brew install anomalyco/tap/opencode # macOS and Linux (recommended, always up to date)
-brew install opencode              # macOS and Linux (official brew formula, updated less)
-sudo pacman -S opencode            # Arch Linux (Stable)
-paru -S opencode-bin               # Arch Linux (Latest from AUR)
-mise use -g opencode               # Any OS
-nix run nixpkgs#opencode           # or github:anomalyco/opencode for latest dev branch
+rslt ocdev    # Lance une session de développement sur la branche active
+rslt ocsys    # Ouvre le canal souverain (Agent rustletsSystem + Mots-clés [] actifs)
+rslt devcycle # Déclenche l'usine (Validation -> Promotion Dev vers Prod -> Publication GitHub)
+rslt opencode # Exécute la version de production stable
 ```
 
-> [!TIP]
-> Remove versions older than 0.1.x before installing.
+---
 
-### Desktop App (BETA)
+### Agents Rustlet
 
-OpenCode is also available as a desktop application. Download directly from the [releases page](https://github.com/anomalyco/opencode/releases) or [opencode.ai/download](https://opencode.ai/download).
+En plus des agents standards, cette édition inclut :
 
-| Platform              | Download                              |
-| --------------------- | ------------------------------------- |
-| macOS (Apple Silicon) | `opencode-desktop-darwin-aarch64.dmg` |
-| macOS (Intel)         | `opencode-desktop-darwin-x64.dmg`     |
-| Windows               | `opencode-desktop-windows-x64.exe`    |
-| Linux                 | `.deb`, `.rpm`, or AppImage           |
+- **rustletsSystem** (Masqué/Natif) :
+  - Gardien de l'infrastructure.
+  - Seul agent autorisé à proposer des modifications de règles primaires.
+  - Utilise les commandes `[add rule]`, `[status]`, `[edit rules]`.
+  - Nécessite une **validation humaine** pour toute action structurelle.
 
-```bash
-# macOS (Homebrew)
-brew install --cask opencode-desktop
-# Windows (Scoop)
-scoop bucket add extras; scoop install extras/opencode-desktop
-```
+---
 
-#### Installation Directory
+### L'Usine Autonome (Automated Factory)
 
-The install script respects the following priority order for the installation path:
+Chaque modification est traitée par notre pipeline GitHub Actions qui assure :
 
-1. `$OPENCODE_INSTALL_DIR` - Custom installation directory
-2. `$XDG_BIN_DIR` - XDG Base Directory Specification compliant path
-3. `$HOME/bin` - Standard user binary directory (if it exists or can be created)
-4. `$HOME/.opencode/bin` - Default fallback
+1. **Ingestion** : Veille technologique sur l'upstream OpenCode original.
+2. **Transformation** : Injection statique de la logique Orix et SegX (AST Rewriting).
+3. **Validation (Corrector)** : Tests de sécurité Guardian et diagnostic d'identité avant publication.
 
-```bash
-# Examples
-OPENCODE_INSTALL_DIR=/usr/local/bin curl -fsSL https://opencode.ai/install | bash
-XDG_BIN_DIR=$HOME/.local/bin curl -fsSL https://opencode.ai/install | bash
-```
-
-### Agents
-
-OpenCode includes two built-in agents you can switch between with the `Tab` key.
-
-- **build** - Default, full-access agent for development work
-- **plan** - Read-only agent for analysis and code exploration
-  - Denies file edits by default
-  - Asks permission before running bash commands
-  - Ideal for exploring unfamiliar codebases or planning changes
-
-Also included is a **general** subagent for complex searches and multistep tasks.
-This is used internally and can be invoked using `@general` in messages.
-
-Learn more about [agents](https://opencode.ai/docs/agents).
-
-### Documentation
-
-For more info on how to configure OpenCode, [**head over to our docs**](https://opencode.ai/docs).
-
-### Contributing
-
-If you're interested in contributing to OpenCode, please read our [contributing docs](./CONTRIBUTING.md) before submitting a pull request.
-
-### Building on OpenCode
-
-If you are working on a project that's related to OpenCode and is using "opencode" as part of its name, for example "opencode-dashboard" or "opencode-mobile", please add a note to your README to clarify that it is not built by the OpenCode team and is not affiliated with us in any way.
-
-### FAQ
-
-#### How is this different from Claude Code?
-
-It's very similar to Claude Code in terms of capability. Here are the key differences:
-
-- 100% open source
-- Not coupled to any provider. Although we recommend the models we provide through [OpenCode Zen](https://opencode.ai/zen), OpenCode can be used with Claude, OpenAI, Google, or even local models. As models evolve, the gaps between them will close and pricing will drop, so being provider-agnostic is important.
-- Out-of-the-box LSP support
-- A focus on TUI. OpenCode is built by neovim users and the creators of [terminal.shop](https://terminal.shop); we are going to push the limits of what's possible in the terminal.
-- A client/server architecture. This, for example, can allow OpenCode to run on your computer while you drive it remotely from a mobile app, meaning that the TUI frontend is just one of the possible clients.
+---
 
 ### Licence (Shared-Code v2.0 Lite)
 
-Ce projet est distribué sous la **Shared-Code License v2.0 (Lite)**. Il s'agit d'une infrastructure liquide souveraine dont l'accès et l'utilisation sont régis par des protocoles d'arbitrage algorithmique.
+Ce projet est distribué sous la **Shared-Code License v2.0 (Lite)**.
 
-- **Licence Souveraine** : Adoption de la **Shared-Code License v2.0 (Lite)**. Protection de la logique structurelle (.rson, SegX) et définition des niveaux d'accès (Lite, Commercial, Industrial).
-- **Stack de Licence (Substrat vs Overlay)** : Intégration autorisée du code sous licence permissive (MIT, Apache 2.0, BSD) en tant que _Substrate Code_, tout en conservant la gouvernance _Sovereign Overlay_ pour l'infrastructure liquide. Exclusion stricte du Strong Copyleft (GPL, AGPL) pour protéger l'intégrité de la logique souveraine.
+- **Concept de Substrat** : Intégration autorisée du code sous licence permissive (MIT, Apache 2.0, BSD).
+- **Sovereign Overlay** : L'orchestration et les améliorations Rustlet restent sous propriété partagée.
+- **Copyleft Exclusion** : Interdiction stricte des composants GPL/AGPL pour protéger la logique souveraine.
 
 Consultez le fichier [LICENSE.md](./LICENSE.md) pour le texte intégral.
 

@@ -1,27 +1,40 @@
-
-## [RELEASE] - 2026-03-08 08:38
-- Promotion stable de la branche dev-rustlet.
-- Validation Guardian & Identity: OK.
 # CHANGELOG-RUSTLET
 
-## [2026-03-07] - Activation de l'Automated Factory
+## [v1.0.2] - 2026-03-08
 
-- **Licence Souveraine** : Adoption de la **Shared-Code License v2.0 (Lite)**. Protection de la logique structurelle (.rson, SegX) et définition des niveaux d'accès (Lite, Commercial, Industrial).
-- **Stack de Licence (v2.0 Revision)** : Ajout de la section 1.3 définissant le concept de _Substrate Code_ (MIT/Apache/BSD) et de _Sovereign Overlay_. Exclusion explicite des licences _Strong Copyleft_ (GPL/AGPL) pour prévenir toute contamination juridique.
-- **Protocole Factory** : Déploiement du moteur de transformation Rust dans `bunScript/github-pipeline`.
-- **Pipeline 3 Étages** : Ingestion (Monitoring), Transformation (Injection Orix), Validation (Corrector).
-- **GitHub Actions** : Déploiement de `rustlet-pipeline.yml` pour une synchronisation et une promotion automatique vers `main-rustlet`.
-- **Indépendance Core** : Séparation stricte entre le code legacy et les optimisations Rustlet.
+### 🛡️ Sécurité & Gouvernance (Zéro Fissure)
 
-## [2026-03-07] - Initial Setup
+- **Rustlet Guardian** : Implémentation du pare-feu de sécurité (Hard-Lock) interceptant les outils `write`, `edit` et `bash`.
+- **Blocage Shell** : Interdiction universelle de modifier les fichiers sanctuarisés (Cargo.toml, guardian.ts) même via des ruses shell (redirections, tee).
+- **Protocole de Souveraineté** : Mise en place des mots-clés primaires `[]` permettant un court-circuitage total de l'IA pour les commandes d'infrastructure.
+- **Co-Souveraineté (Dual-Key)** : Délégation de commandes système à l'IA avec demande de **confirmation humaine obligatoire** via boîte de dialogue TUI.
 
-- Configuration des remotes : `origin` (GitHub `rustlets/opencode`), `upstream` (OpenCode GitHub), `rustlets-gitlab` (GitLab).
-- Création de la branche de suivi `upstream-track`.
-- Établissement de la branche stable `main-rustlet` comme branche par défaut.
-- Établissement de la branche de développement `dev-rustlet` pour les commits quotidiens.
-- Architecture à deux niveaux : `dev-rustlet` (intégration/travail) -> `main-rustlet` (stable/release).
+### 🤖 Intelligence & Agents
 
-### Infrastructure
+- **Agent rustletsSystem** : Création d'un agent souverain natif, masqué et prioritaire pour la gestion de l'infrastructure.
+- **Sanctuarisation des Prompts** : Les instructions de l'agent système sont désormais compilées dans le binaire (inaccessibles via le workspace).
 
-- Authentification SSH configurée pour l'organisation GitHub `rustlets`.
-- `README.md` standardisé pour la distribution Rustlet Edition.
+### 🚀 Infrastructure & Déploiement
+
+- **Multi-Server Validation** : Déploiement et optimisation réussis sur **SERVER3**.
+- **Automated SSH** : Déploiement de clés de service pour synchronisation GitHub autonome entre les serveurs.
+- **Smart-Runtime rslt** : Mise à jour du dispatcher pour supporter les commandes `ocdev`, `ocsys` et `devcycle`.
+- **Hybrid Mirroring** : Synchronisation temps réel et backup GitOps simultanés sur GitHub et GitLab.
+
+## [v1.0.1] - 2026-03-07
+
+### 🏭 Automated Factory
+
+- **Moteur de Transformation** : Activation du transformateur Rust (3 étages : Ingestion, Transformation, Validation).
+- **GitHub Actions V2** : Build matrix multi-OS (Linux, Windows, Mac) pour production d'artefacts immuables.
+- **Changelog Automatisé** : Génération en temps réel des notes de version via le moteur de transformation.
+- **SLA (Service Level Agreements)** : Standardisation sur Rust Stable et politique "Zéro Warning" (`#[deny(warnings)]`).
+
+## [v1.0.0] - 2026-03-07
+
+### 🏗️ Initial Setup
+
+- **Fork Officiel** : Création du dépôt `rustlets/opencode-RustletsEdition`.
+- **Licence Souveraine** : Adoption de la **Shared-Code License v2.0 (Lite)**.
+- **Subdivision Statique** : Première injection du wrapper Rustlet dans le point d'entrée (`OPENCODE_EDITION`).
+- **Standardisation GitHub** : Configuration des branches `main-rustlet` (stable) et `dev-rustlet` (travail).
