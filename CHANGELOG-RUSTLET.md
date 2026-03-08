@@ -1,3 +1,7 @@
+
+## [RELEASE] - 2026-03-08 09:05
+- Promotion stable de la branche dev-rustlet.
+- Validation Guardian & Identity: OK.
 # CHANGELOG-RUSTLET
 
 ## [v1.0.2] - 2026-03-08
