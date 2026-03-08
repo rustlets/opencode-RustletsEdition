@@ -14,33 +14,38 @@ async function checkHang() {
   })
 
   let output = ""
+  let errorOutput = ""
   let isProgressing = false
 
   child.stdout.on("data", (data) => {
     const str = data.toString()
     output += str
-    // Si on voit "Ask anything" ou "Session", c'est que la boucle interactive est active
     if (str.includes("Ask anything") || str.includes("Session") || str.includes("Continue")) {
       isProgressing = true
     }
   })
 
-  // On attend 15 secondes pour laisser le temps au logo et à l'initialisation
+  child.stderr.on("data", (data) => {
+    errorOutput += data.toString()
+  })
+
+  // On attend 15 secondes
   await new Promise((resolve) => setTimeout(resolve, 15000))
 
   child.kill()
 
   console.log("📊 [RESULTATS] Analyse de la sortie...")
+  console.log(`📝 SORTIE BRUTE :\n${output}`)
+  console.log(`⚠️ ERREURS CAPTURÉES :\n${errorOutput}`)
 
   if (output.includes("OpenCode") && !isProgressing) {
     console.error("🚨 [CRITICAL_FAILURE] BUG 0/0 DÉTECTÉ !")
-    console.error("L'application affiche le logo mais la boucle interactive est gelée.")
     process.exit(1)
   } else if (!output.includes("OpenCode")) {
-    console.error("❌ [FAILURE] L'application n'a même pas affiché le logo.")
+    console.error("❌ [FAILURE] L'application n'a pas atteint le logo.")
     process.exit(1)
   } else {
-    console.log("✅ [SUCCESS] Aucune trace de gel. La boucle interactive est active.")
+    console.log("✅ [SUCCESS] Boucle interactive active.")
     process.exit(0)
   }
 }
