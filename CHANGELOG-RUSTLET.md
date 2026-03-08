@@ -1,4 +1,8 @@
 
+## [RELEASE] - 2026-03-08 09:20
+- Promotion stable de la branche dev-rustlet.
+- Validation Guardian & Identity: OK.
+
 ## [RELEASE] - 2026-03-08 09:10
 - Promotion stable de la branche dev-rustlet.
 - Validation Guardian & Identity: OK.
