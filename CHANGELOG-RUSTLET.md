@@ -1,3 +1,7 @@
+
+## [RELEASE] - 2026-03-08 08:38
+- Promotion stable de la branche dev-rustlet.
+- Validation Guardian & Identity: OK.
 # CHANGELOG-RUSTLET
 
 ## [2026-03-07] - Activation de l'Automated Factory
