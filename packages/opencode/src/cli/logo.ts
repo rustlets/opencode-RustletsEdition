@@ -4,7 +4,7 @@ export const logo = {
     "█▀▀█ █▀▀█ █▀▀█ █▀▀▄",
     "█__█ █__█ █^^^ █__█",
     "▀▀▀▀ █▀▀▀ ▀▀▀▀ ▀~~▀",
-    "\x1b[90mRustlets edition v6 \x1b[0m",
+    "\x1b[90mRustlets edition v7 \x1b[0m",
   ],
   right: [
     "             ▄     ",
